@@ -10,11 +10,14 @@ import (
 )
 
 var (
-	// String for connect in database
+	// DbConnectStr - String for connect in database
 	DbConnectStr = ""
 
 	// PORT - Port the application will run on
 	PORT = 0
+
+	// SecretKey - Key of jwt token
+	SecretKey []byte
 )
 
 // Load - Loads all environment variables
@@ -35,4 +38,6 @@ func Load() {
 		os.Getenv("DB_PASS"),
 		os.Getenv("DB_NAME"),
 	)
+
+	SecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 }
