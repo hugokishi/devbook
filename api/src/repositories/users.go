@@ -101,3 +101,20 @@ func (repository Users) GetByID(ID uint64) (models.User, error) {
 
 	return user, nil
 }
+
+// UpdateUser - Method to update user in database
+func (repository Users) UpdateUser(ID uint64, user models.User) error {
+	statement, err := repository.db.Prepare(
+		"update users set name = ? nick = ? email = ? where id = ?",
+	)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(user.Name, user.Nick, user.Email, ID); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -17,8 +17,8 @@ type User struct {
 }
 
 // Prepare - Call methods to format and validate recieved users
-func (user *User) Prepare() error {
-	if err := user.validate(); err != nil {
+func (user *User) Prepare(step string) error {
+	if err := user.validate(step); err != nil {
 		return err
 	}
 	user.format()
@@ -26,7 +26,7 @@ func (user *User) Prepare() error {
 }
 
 // validate - Validate user
-func (user *User) validate() error {
+func (user *User) validate(step string) error {
 	if user.Name == "" {
 		return errors.New("The name is required")
 	}
@@ -36,7 +36,7 @@ func (user *User) validate() error {
 	if user.Email == "" {
 		return errors.New("The email is required")
 	}
-	if user.Password == "" {
+	if step == "register" && user.Password == "" {
 		return errors.New("The password is required")
 	}
 	return nil
