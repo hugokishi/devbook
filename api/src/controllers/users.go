@@ -118,7 +118,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if userID != userIDToken {
-		responses.Error(w, http.StatusForbidden, errors.New("No authorization"))
+		responses.Error(w, http.StatusForbidden, errors.New("Without authorization for that request"))
 		return
 	}
 
@@ -163,6 +163,17 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	userID, err := strconv.ParseUint(parameters["id"], 10, 64)
 	if err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	userIDToken, err := authentication.ExtractUserID(r)
+	if err != nil {
+		responses.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userID != userIDToken {
+		responses.Error(w, http.StatusForbidden, errors.New("Without authorization for that request"))
 		return
 	}
 
