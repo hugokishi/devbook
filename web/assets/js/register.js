@@ -17,5 +17,10 @@ function createUser(e){
       nick: $('#nick').val(),
       password: $('#pass').val()
     }
+  }).done(function(){
+    alert("Usuário cadastrado com sucesso!");
+  }).fail(function(err) {
+    console.log(err)
+    alert("Não foi possivel cadastrar o usuário");
   }); 
 }
