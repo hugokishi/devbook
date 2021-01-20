@@ -8,11 +8,28 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 // ListUsers - Function for list all users in databbase
 func ListUsers(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("List all Users"))
+	nameOrNick := strings.ToLower(r.URL.Query().Get("usuario"))
+
+	db, err := database.Connect()
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repositories.NewUserRepository(db)
+	users, err := repository.GetUsers(nameOrNick)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, users)
 }
 
 // CreateUser - Function for create user in database
