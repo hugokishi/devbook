@@ -9,18 +9,20 @@
 <body>
   <div class="container-login">
     <div>
-      <form class="devbook-form" id="login">
+      <form class="devbook-form" id="form-login">
         <span>Seja bem vindo ao DevBook!</span>
         <div>
-          <input type="text" name="email" id="email" placeholder="Digite seu email!" required>
+          <input type="text" name="email" id="email" placeholder="Digite seu email" required>
         </div>
         <div>
-          <input type="password" name="pass" id="pass" placeholder="Digite sua senha!" required>
+          <input type="password" name="pass" id="pass" placeholder="Digite a sua senha" required>
         </div>
-        <a href="#"> Clique aqui para criar sua conta! </a>
+        <a href="/register"> Clique aqui para criar sua conta! </a>
         <button type="submit" class="btn-devbook"> Login </button>
       </form>
     </div>
   </div>
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/register.js"></script>
 </body>
 </html>
