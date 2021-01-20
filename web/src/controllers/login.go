@@ -6,17 +6,16 @@ import (
 	"fmt"
 	"net/http"
 	"web/src/config"
+	"web/src/models"
 	"web/src/responses"
 )
 
-// CreateUser - Call api to create new user
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+// AuthenticateUser - Authenticate user in API
+func AuthenticateUser(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	user, err := json.Marshal(map[string]string{
-		"name":     r.FormValue("name"),
 		"email":    r.FormValue("email"),
-		"nick":     r.FormValue("nick"),
 		"password": r.FormValue("password"),
 	})
 	if err != nil {
@@ -24,7 +23,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/users", config.APIURL)
+	url := fmt.Sprintf("%s/login", config.APIURL)
 	response, err := http.Post(url, "application/json", bytes.NewBuffer(user))
 	if err != nil {
 		responses.JSON(w, http.StatusInternalServerError, responses.ErrorAPI{Err: err.Error()})
@@ -37,5 +36,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, response.StatusCode, nil)
+	var dataAuthentication models.DataAuthentication
+	if err := json.NewDecoder(response.Body).Decode(&dataAuthentication); err != nil {
+		responses.JSON(w, http.StatusUnprocessableEntity, responses.ErrorAPI{Err: err.Error()})
+		return
+	}
+
+	//
+
+	responses.JSON(w, http.StatusOK, nil)
 }
