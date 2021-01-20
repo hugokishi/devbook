@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"web/src/config"
+	"web/src/cookies"
 	"web/src/models"
 	"web/src/responses"
 )
@@ -42,7 +43,10 @@ func AuthenticateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//
+	if err = cookies.Save(w, dataAuthentication.ID, dataAuthentication.Token); err != nil {
+		responses.JSON(w, http.StatusUnprocessableEntity, responses.ErrorAPI{Err: err.Error()})
+		return
+	}
 
 	responses.JSON(w, http.StatusOK, nil)
 }
