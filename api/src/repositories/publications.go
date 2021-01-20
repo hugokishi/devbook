@@ -103,3 +103,32 @@ func (repository Publications) GetPublications(userID uint64) ([]models.Publicat
 
 	return publications, nil
 }
+
+// UpdatePublication - Update the publication
+func (repository Publications) UpdatePublication(publicationID uint64, publication models.Publication) error {
+	statement, err := repository.db.Prepare("update publications set title = ?, content = ? where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(publication.Title, publication.Content, publicationID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DeletePublication - Delete publication in database
+func (repository Publications) DeletePublication(publicationID uint64) error {
+	statement, err := repository.db.Prepare("delete from publications where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(publicationID); err != nil {
+		return err
+	}
+	return nil
+}
