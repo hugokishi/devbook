@@ -66,3 +66,40 @@ func (repository Publications) GetPublicationByID(publicationID uint64) (models.
 
 	return publication, nil
 }
+
+// GetPublications - Return all publication with user and your followers
+func (repository Publications) GetPublications(userID uint64) ([]models.Publication, error) {
+	lines, err := repository.db.Query(`
+		select distinct p.*, u.nick from publications p
+		inner join users u on u.id = p.author_id
+		inner join followers f on p.author_id = f.user_id
+		where u.id = ? or f_follower_id = ?
+	`, userID, userID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer lines.Close()
+
+	var publications []models.Publication
+
+	for lines.Next() {
+		var publication models.Publication
+
+		if err := lines.Scan(
+			&publication.ID,
+			&publication.Title,
+			&publication.Content,
+			&publication.AuthorID,
+			&publication.Likes,
+			&publication.CreatedAt,
+			&publication.AuthorNick,
+		); err != nil {
+			return nil, err
+		}
+
+		publications = append(publications, publication)
+	}
+
+	return publications, nil
+}

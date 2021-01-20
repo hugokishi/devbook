@@ -61,6 +61,27 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 
 // GetPublications - get all publications with user and your followers
 func GetPublications(w http.ResponseWriter, r *http.Request) {
+	userID, err := authentication.ExtractUserID(r)
+	if err != nil {
+		responses.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repositories.NewPublicationRepository(db)
+	publications, err := repository.GetPublications(userID)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, publications)
 
 }
 
@@ -80,10 +101,8 @@ func GetPublication(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	var publication models.Publication
-
 	repository := repositories.NewPublicationRepository(db)
-	publication, err = repository.GetPublicationByID(publicationID)
+	publication, err := repository.GetPublicationByID(publicationID)
 	if err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
