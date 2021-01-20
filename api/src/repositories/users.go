@@ -157,3 +157,37 @@ func (repository Users) GetByEmail(email string) (models.User, error) {
 
 	return user, nil
 }
+
+// FollowUser - Method to follow other user
+func (repository Users) FollowUser(userID, followID uint64) error {
+	statement, err := repository.db.Prepare(
+		"insert ignore into followers (user_id, follower_id) values (?, ?)",
+	)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(userID, followID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UnFollowUser - Method to unfollow user
+func (repository Users) UnFollowUser(userID, followID uint64) error {
+	statement, err := repository.db.Prepare(
+		"delete from followers where user_id = ? and follower_id = ?",
+	)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(userID, followID); err != nil {
+		return err
+	}
+
+	return nil
+}
