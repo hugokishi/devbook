@@ -42,5 +42,11 @@ func LoadHomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.RunTemplate(w, "home.html", publications)
+	utils.RunTemplate(w, "home.html", struct {
+		Publications []models.Publication
+		OtherValue   string
+	}{
+		Publications: publications,
+		OtherValue:   "teste",
+	})
 }
