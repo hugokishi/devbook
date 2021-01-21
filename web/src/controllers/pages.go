@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 	"web/src/config"
 	"web/src/cookies"
 	"web/src/models"
@@ -95,101 +94,4 @@ func LoadEditPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RunTemplate(w, "edit-publication.html", publication)
-}
-
-// LoadUsersPage - Load users page
-func LoadUsersPage(w http.ResponseWriter, r *http.Request) {
-	nameOrNick := strings.ToLower(r.URL.Query().Get("user"))
-
-	url := fmt.Sprintf("%s/users?usuario=%s", config.APIURL, nameOrNick)
-
-	response, err := requests.RequestsWithAuthentication(r, http.MethodGet, url, nil)
-	if err != nil {
-		responses.JSON(w, http.StatusInternalServerError, responses.ErrorAPI{Err: err.Error()})
-		return
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode >= 400 {
-		responses.TreatStatusCode(w, response)
-		return
-	}
-
-	var users []models.User
-	if err := json.NewDecoder(response.Body).Decode(&users); err != nil {
-		responses.JSON(w, http.StatusUnprocessableEntity, responses.ErrorAPI{Err: err.Error()})
-		return
-	}
-
-	utils.RunTemplate(w, "users.html", users)
-}
-
-// LoadUserPage - Load user profile
-func LoadUserPage(w http.ResponseWriter, r *http.Request) {
-	parameters := mux.Vars(r)
-	userID, err := strconv.ParseUint(parameters["userId"], 10, 64)
-	if err != nil {
-		responses.JSON(w, http.StatusBadRequest, responses.ErrorAPI{Err: err.Error()})
-		return
-	}
-
-	cookie, _ := cookies.Read(r)
-	userIDLogged, _ := strconv.ParseUint(cookie["id"], 10, 64)
-
-	user, err := models.SearchCompleteUser(userID, r)
-	if err != nil {
-		responses.JSON(w, http.StatusInternalServerError, responses.ErrorAPI{Err: err.Error()})
-		return
-	}
-
-	if userID == userIDLogged {
-		http.Redirect(w, r, "/profile", 302)
-		return
-	}
-
-	utils.RunTemplate(w, "user.html", struct {
-		User         models.User
-		UserLoggedID uint64
-	}{
-		User:         user,
-		UserLoggedID: userIDLogged,
-	})
-}
-
-// LoadUserLoggedProfile - Load the user profile
-func LoadUserLoggedProfile(w http.ResponseWriter, r *http.Request) {
-	cookie, _ := cookies.Read(r)
-	userID, _ := strconv.ParseUint(cookie["id"], 10, 64)
-
-	user, err := models.SearchCompleteUser(userID, r)
-	if err != nil {
-		responses.JSON(w, http.StatusInternalServerError, responses.ErrorAPI{Err: err.Error()})
-		return
-	}
-
-	utils.RunTemplate(w, "profile.html", user)
-
-}
-
-// LoadUserEditPage - Load page to edit user
-func LoadUserEditPage(w http.ResponseWriter, r *http.Request) {
-	cookie, _ := cookies.Read(r)
-	userID, _ := strconv.ParseUint(cookie["id"], 10, 64)
-
-	channel := make(chan models.User)
-
-	go models.GetUserData(channel, userID, r)
-
-	user := <-channel
-	if user.ID == 0 {
-		responses.JSON(w, http.StatusInternalServerError, responses.ErrorAPI{Err: "Erro ao buscar o usuário"})
-		return
-	}
-
-	utils.RunTemplate(w, "edit-profile.html", user)
-}
-
-// LoadUserPasswordEditPage - Method to load page to update password
-func LoadUserPasswordEditPage(w http.ResponseWriter, r *http.Request) {
-	utils.RunTemplate(w, "update-password.html", nil)
 }
