@@ -1,6 +1,6 @@
 {{ define "navbar" }}
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">DevBook</a>
+    <a class="navbar-brand" href="/feed">DevBook</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-principal"
       aria-controls="navbar-principal" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -12,12 +12,12 @@
           <a class="nav-link" href="/feed">Página Principal </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/perfil">Meu Perfil</a>
+          <a class="nav-link" href="/profile">Meu Perfil</a>
         </li>
 
         <li class="nav-item">
-          <form class="form-inline my-2 my-lg-0" action="/searc-users" method="GET">
-            <input class="form-control mr-sm-2" type="search" placeholder="Buscar Usuários" id="usuario" name="usuario"
+          <form class="form-inline my-2 my-lg-0" action="/search-users" method="GET">
+            <input class="form-control mr-sm-2" type="search" placeholder="Buscar Usuários" id="user" name="user"
               required="required">
           </form>
         </li>
