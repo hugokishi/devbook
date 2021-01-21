@@ -14,11 +14,11 @@ func Logger(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// Authentication - Verify authentication data
-func Authentication(next http.HandlerFunc) http.HandlerFunc {
+// Authenticate - Verify authentication data
+func Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if _, err := cookies.Read(r); err != nil {
-			http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+			http.Redirect(w, r, "/login", 302)
 			return
 		}
 		next(w, r)

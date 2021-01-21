@@ -5,9 +5,9 @@ import (
 	"web/src/controllers"
 )
 
-var homeRoutes = Route{
-	URI:            "/home",
-	Method:         http.MethodGet,
-	Handler:        controllers.LoadHomePage,
-	Authentication: true,
+var principalRoutes = Route{
+	URI:                "/feed",
+	Method:             http.MethodGet,
+	Handler:            controllers.LoadHomePage,
+	NeedAuthentication: true,
 }

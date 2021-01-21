@@ -7,15 +7,15 @@ import (
 
 var userRoutes = []Route{
 	{
-		URI:            "/register",
-		Method:         http.MethodGet,
-		Handler:        controllers.LoadRegisterPage,
-		Authentication: false,
+		URI:                "/register",
+		Method:             http.MethodGet,
+		Handler:            controllers.LoadRegisterPage,
+		NeedAuthentication: false,
 	},
 	{
-		URI:            "/users",
-		Method:         http.MethodPost,
-		Handler:        controllers.CreateUser,
-		Authentication: false,
+		URI:                "/users",
+		Method:             http.MethodPost,
+		Handler:            controllers.CreateUser,
+		NeedAuthentication: false,
 	},
 }

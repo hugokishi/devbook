@@ -11,7 +11,7 @@ function authenticateUser(e){
       password: $('#pass').val()
     }
   }).done(function(){
-    window.location = "/home"
+    window.location = "/feed"
   }).fail(function() {
     alert("Usuário ou senha inválidos!");
   }); 
