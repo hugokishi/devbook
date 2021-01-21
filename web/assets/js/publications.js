@@ -1,5 +1,6 @@
 $('#new-publication').on('submit', createPublication)
-$('.like-publication').on('click', likePublication)
+$(document).on('click', '.like-publication', likePublication)
+$(document).on('click', '.deslike-publication', deslikePublication)
 
 function createPublication(e){
   e.preventDefault();
@@ -24,13 +25,51 @@ function likePublication(e){
   const elm = $(e.target);
   const publicationId = elm.closest('div').data('publication-id')
 
+  elm.prop('disabled', true)
+
   $.ajax({
     url: `/publications/${publicationId}/like`,
     method: "POST"
   }).done(function () {
-    alert("Publicação Curtida")
+    const like_counter = elm.next('span')
+    const qtd_likes = parseInt(like_counter.text())
+    like_counter.text(qtd_likes + 1);
+
+    elm.addClass('deslike-publication')
+    elm.addClass('text-danger')
+    elm.removeClass('like-publication')
+
   }).fail(function() {
     alert("Erro ao curtir")
+  }).always(function() {
+    elm.prop('disabled', false)
+  })
+}
+
+function deslikePublication(e){
+  e.preventDefault();
+
+  const elm = $(e.target);
+  const publicationId = elm.closest('div').data('publication-id')
+
+  elm.prop('disabled', true)
+
+  $.ajax({
+    url: `/publications/${publicationId}/deslike`,
+    method: "POST"
+  }).done(function () {
+    const like_counter = elm.next('span')
+    const qtd_likes = parseInt(like_counter.text())
+    like_counter.text(qtd_likes - 1);
+
+    elm.removeClass('deslike-publication')
+    elm.removeClass('text-danger')
+    elm.addClass('like-publication')
+
+  }).fail(function() {
+    alert("Erro ao descurtir")
+  }).always(function() {
+    elm.prop('disabled', false)
   })
 
 }
