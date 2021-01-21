@@ -1,6 +1,7 @@
 $('#new-publication').on('submit', createPublication)
 $(document).on('click', '.like-publication', likePublication)
 $(document).on('click', '.deslike-publication', deslikePublication)
+$('#update-publication').on('click', updatePublication)
 
 function createPublication(e){
   e.preventDefault();
@@ -71,6 +72,26 @@ function deslikePublication(e){
   }).always(function() {
     elm.prop('disabled', false)
   })
+}
 
+function updatePublication(e){
+  $(this).prop('disabled', true)
+
+  const publicationId = $(this).data('publication-id')
+  
+  $.ajax({
+    url: `/publications/${publicationId}`,
+    method: 'PUT',
+    data: {
+      title: $('#title').val(),
+      content: $('#content').val(),
+    }
+  }).done(function() {
+    alert("Atualizado")
+  }).fail(function(){
+    alert("Erro")
+  }).always(function(){
+    $('#update-publication').prop('disabled', false)
+  })
 }
 

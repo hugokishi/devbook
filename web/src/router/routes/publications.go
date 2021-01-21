@@ -24,4 +24,16 @@ var publicationsRoutes = []Route{
 		Handler:            controllers.DeslikePublication,
 		NeedAuthentication: true,
 	},
+	{
+		URI:                "/publications/{publicationId}/edit",
+		Method:             http.MethodGet,
+		Handler:            controllers.LoadEditPage,
+		NeedAuthentication: true,
+	},
+	{
+		URI:                "/publications/{publicationId}",
+		Method:             http.MethodPut,
+		Handler:            controllers.UpdatePublication,
+		NeedAuthentication: true,
+	},
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevBook - Atualizar Publicação</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+</head>
+
+<body>
+  {{ template "navbar" }}
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col-12">
+        <h3> Editar Publicação </h3>
+        <div class="form-group">
+          <label for="title">Título</label>
+          <input type="text" class="form-control" name="title" id="title" placeholder="Insira o título da publicação"
+            value="{{ .Title }}">
+        </div>
+        <div class="form-group">
+          <label for="content"> Conteúdo </label>
+          <textarea class="form-control" name="content" id="content" placeholder="Esreva o conteúdo da publicação">{{ .Content }}</textarea>
+        </div>
+        <button id="update-publication" class="btn btn-info" data-publication-id="{{ .ID }}">
+          Atualizar Publicação
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ template "footer" }}
+  {{ template "scripts" }}
+  <script src="/assets/js/publications.js"></script>
+</body>
+
+</html>
