@@ -26,7 +26,7 @@
 {{ end }}
 
 {{ define "likes" }}
-  <i class="fas fa-heart like-publication"></i>
+  <i class="fas fa-heart like-publication" style="cursor: pointer;"></i>
   <span> {{ .Likes }} </span>
 {{ end }}
 
@@ -37,7 +37,5 @@
 {{ end }}
 
 {{ define "delete" }}
-  <a href="/delete" style="text-decoration: none;"> 
-    <i class="fas fa-trash text-danger"></i> 
-  </a>
+  <i class="fas fa-trash text-danger delete-publication" style="cursor: pointer;" ></i> 
 {{ end }}

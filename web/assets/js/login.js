@@ -13,6 +13,6 @@ function authenticateUser(e){
   }).done(function(){
     window.location = "/feed"
   }).fail(function() {
-    alert("Usuário ou senha inválidos!");
+    Swal.fire('Ops...', "Usuário ou senha inválidos", "error")
   }); 
 }

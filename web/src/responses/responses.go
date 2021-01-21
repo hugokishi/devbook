@@ -16,7 +16,7 @@ func JSON(w http.ResponseWriter, statusCode int, datas interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
-	if datas != nil {
+	if statusCode != http.StatusNoContent {
 		if err := json.NewEncoder(w).Encode(datas); err != nil {
 			log.Fatal(err)
 		}

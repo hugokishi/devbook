@@ -2,6 +2,7 @@ $('#new-publication').on('submit', createPublication)
 $(document).on('click', '.like-publication', likePublication)
 $(document).on('click', '.deslike-publication', deslikePublication)
 $('#update-publication').on('click', updatePublication)
+$('.delete-publication').on('click', deletePublication)
 
 function createPublication(e){
   e.preventDefault();
@@ -14,9 +15,20 @@ function createPublication(e){
       content: $('#content').val(),
     }
   }).done(function() {
-    window.location = "/feed"
-  }).fail(function(){
-    alert("Erro ao criar a publicação")
+    Swal.fire(
+      'Sucesso!',
+      'Publicação criada com sucesso!',
+      'success'
+    ).then(function(){
+      window.location = "/feed"
+    })
+  }).fail(function(err){
+    console.log(err)
+    Swal.fire(
+      'Ops...',
+      'Erro ao criar a publicação!',
+      'error'
+    )
   })
 }
 
@@ -41,7 +53,11 @@ function likePublication(e){
     elm.removeClass('like-publication')
 
   }).fail(function() {
-    alert("Erro ao curtir")
+    Swal.fire(
+      'Ops...',
+      'Erro ao curtir a publicação!',
+      'error'
+    )
   }).always(function() {
     elm.prop('disabled', false)
   })
@@ -68,7 +84,11 @@ function deslikePublication(e){
     elm.addClass('like-publication')
 
   }).fail(function() {
-    alert("Erro ao descurtir")
+    Swal.fire(
+      'Ops...',
+      'Erro ao descurtir a publicação!',
+      'error'
+    )
   }).always(function() {
     elm.prop('disabled', false)
   })
@@ -87,11 +107,56 @@ function updatePublication(e){
       content: $('#content').val(),
     }
   }).done(function() {
-    alert("Atualizado")
+    Swal.fire(
+      'Sucesso!',
+      'Publicação atualizada com sucesso!',
+      'success'
+    ).then(function(){
+      window.location = "/feed"
+    })
   }).fail(function(){
-    alert("Erro")
+    Swal.fire(
+      'Ops...',
+      'Erro ao atualizar a publicação!',
+      'error'
+    )
   }).always(function(){
     $('#update-publication').prop('disabled', false)
   })
 }
 
+function deletePublication(e){
+  e.preventDefault();
+
+  Swal.fire({
+    title: 'Atenção!',
+    text: 'Deseja excluir essa publicação?',
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',
+    icon: 'warning'
+  }).then(function(confirm){
+    if(!confirm.value) return
+
+    const elm = $(e.target)
+    const publication = elm.closest('div')
+    const publicationId = publication.data('publication-id')
+
+    elm.prop('disabled', true)
+
+    $.ajax({
+      url: `/publications/${publicationId}`,
+      method: 'DELETE',
+    }).done(function() {
+      publication.fadeOut("slow", function(){
+        $(this).remove()
+      })
+    }).fail(function(){
+      Swal.fire(
+        'Ops...',
+        'Erro ao deletar a publicação!',
+        'error'
+      )
+    })
+  })
+
+}
