@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"web/src/config"
+	"web/src/cookies"
 	"web/src/models"
 	"web/src/requests"
 	"web/src/responses"
@@ -42,11 +44,14 @@ func LoadHomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cookie, _ := cookies.Read(r)
+	userID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
 	utils.RunTemplate(w, "home.html", struct {
 		Publications []models.Publication
-		OtherValue   string
+		UserID       uint64
 	}{
 		Publications: publications,
-		OtherValue:   "teste",
+		UserID:       userID,
 	})
 }
