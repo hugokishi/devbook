@@ -1,1 +1,1 @@
-## developed during studies on golang
+## Developed during studies on golang
