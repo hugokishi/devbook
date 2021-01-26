@@ -1,3 +1,1 @@
-# DevBook
-
-## Built in school to learn more about GO!
+## developed during studies on golang
